@@ -12,6 +12,7 @@ import {
 	RefreshCw,
 	Plus,
 	AlignJustify,
+	X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,7 +141,11 @@ function Navbar() {
 				className={`h-16 sm:hidden bg-white py-5 px-4 flex items-center justify-between ${!open && "border-b "}`}
 			>
 				<Image src={logo} alt={logo} className="-ml-4 aspect-auto h-8" />
-				<AlignJustify className="size-5" onClick={() => setIsOpen(!open)} />
+				{open ? (
+					<X className="size-5" onClick={() => setIsOpen(false)} />
+				) : (
+					<AlignJustify className="size-5" onClick={() => setIsOpen(true)} />
+				)}
 			</nav>
 			{open && (
 				<div className="sm:hidden z-50 fixed top-16 bottom-0 inset-x-0 bg-black/30">
