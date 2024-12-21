@@ -1,101 +1,192 @@
+"use client";
+
+import {
+	Search,
+	Home,
+	Code2,
+	Shield,
+	BookOpen,
+	Settings,
+	Phone,
+	LogOut,
+	RefreshCw,
+	Plus,
+	AlignJustify,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import logo from "../../public/logo.svg";
 import Image from "next/image";
+import { repositories } from "@/lib/data";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
+import { Repository } from "@/components/repository";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+type IconType = { icon: any; text: string };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+const sidebarItems: IconType[] = [
+	{ icon: Home, text: "Repositories" },
+	{ icon: Code2, text: "AI Code Review" },
+	{ icon: Shield, text: "Cloud Security" },
+	{ icon: BookOpen, text: "How to Use" },
+	{ icon: Settings, text: "Settings" },
+	{ icon: Phone, text: "Support" },
+	{ icon: LogOut, text: "Logout" },
+];
+
+const users = ["UtkarshDhairyaPanwar", "Jimmy", "John", "Jane"];
+
+export default function RepositoryDashboard() {
+	const [filteredRepos, setFilteredRepos] = useState(repositories);
+	const [term, setTerm] = useState("");
+	return (
+		<div className="flex flex-col bg-secondary h-screen sm:flex-row">
+			<Sidebar />
+			<Navbar />
+			<ScrollArea className="w-full rounded-md sm:border">
+				<div className="flex-1 sm:p-6">
+					<div className="sm:border bg-white mx-auto rounded-lg">
+						{/* Header */}
+						<div className="border-b px-6 py-5 space-y-4">
+							<div className="flex flex-col gap-3 justify-between md:items-center md:flex-row">
+								<div>
+									<h1 className="text-2xl font-semibold mb-1">Repositories</h1>
+									<p className="text-muted-foreground text-sm">
+										33 total repositories
+									</p>
+								</div>
+								<div className="flex gap-2">
+									<Button
+										variant="outline"
+										size="sm"
+										className=" gap-[6px] h-10"
+									>
+										<RefreshCw className="h-4 w-4" />
+										Refresh All
+									</Button>
+									<Button size="sm" className=" gap-[6px] h-10">
+										<Plus className="h-4 w-4" />
+										Add Repository
+									</Button>
+								</div>
+							</div>
+							<div className="relative">
+								<Search className="absolute left-3 top-[9px] h-4 w-4 text-muted-foreground" />
+								<Input
+									placeholder="Search Repositories"
+									className="pl-9 max-w-sm"
+									value={term}
+									onChange={(e) => {
+										setTerm(e.target.value);
+										setFilteredRepos(
+											repositories.filter((repo) =>
+												repo.name
+													.toLowerCase()
+													.includes(e.target.value.toLowerCase()),
+											),
+										);
+									}}
+								/>
+							</div>
+						</div>
+						{filteredRepos.map((repo) => (
+							<Repository repo={repo} key={repo.name} />
+						))}
+					</div>
+				</div>
+			</ScrollArea>
+		</div>
+	);
+}
+
+function Sidebar() {
+	return (
+		<aside className="hidden w-60 border-r bg-card py-6 px-4 gap-y-5 sm:flex flex-col">
+			<Image src={logo} alt={logo} className="aspect-auto h-8" />
+			<SelectUser />
+			<div className="-mt-1">
+				<NavItems items={sidebarItems.slice(0, 5)} />
+			</div>
+			<div className="fixed bottom-4 space-y-0.5">
+				{sidebarItems.slice(5).map((item) => (
+					<Button
+						key={item.text}
+						variant="ghost"
+						className="w-full justify-start gap-3 h-10 rounded-lg"
+					>
+						<item.icon className="h-5 w-5" />
+						{item.text}
+					</Button>
+				))}
+			</div>
+		</aside>
+	);
+}
+
+function Navbar() {
+	const [open, setIsOpen] = useState(false);
+	return (
+		<>
+			<nav
+				className={`h-16 sm:hidden bg-white py-5 px-4 flex items-center justify-between ${!open && "border-b "}`}
+			>
+				<Image src={logo} alt={logo} className="-ml-4 aspect-auto h-8" />
+				<AlignJustify className="size-5" onClick={() => setIsOpen(!open)} />
+			</nav>
+			{open && (
+				<div className="sm:hidden z-50 fixed top-16 bottom-0 inset-x-0 bg-black/30">
+					<div className="px-4 pb-6 bg-white space-y-3">
+						<SelectUser />
+						<NavItems items={sidebarItems} />
+					</div>
+				</div>
+			)}
+		</>
+	);
+}
+
+function SelectUser() {
+	return (
+		<Select>
+			<SelectTrigger className="w-full">
+				<SelectValue placeholder={users[0]} />
+			</SelectTrigger>
+			<SelectContent>
+				<SelectGroup>
+					<SelectLabel>Select user</SelectLabel>
+					{users.map((user) => (
+						<SelectItem value={user} key={user} className="capitalize">
+							{user}
+						</SelectItem>
+					))}
+				</SelectGroup>
+			</SelectContent>
+		</Select>
+	);
+}
+
+function NavItems({ items }: { items: IconType[] }) {
+	return (
+		<div className="space-y-1">
+			{items.map((item) => (
+				<Button
+					key={item.text}
+					variant={item.text === "Repositories" ? "default" : "ghost"}
+					className="w-full justify-start gap-3 h-10 rounded-lg font-medium	"
+				>
+					<item.icon className="h-5 w-5" />
+					{item.text}
+				</Button>
+			))}
+		</div>
+	);
 }
